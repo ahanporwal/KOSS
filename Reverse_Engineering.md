@@ -57,6 +57,7 @@ hash = hash * 33 + char;
 
 Code:
 input="hello\n" //hello was my input string
+
 unsigned long hash = 5381;
 
 for each character c in input:
